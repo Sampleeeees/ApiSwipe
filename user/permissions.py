@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import response, status
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from django.core.exceptions import ObjectDoesNotExist
-
+from message.models import Message
 from gallery.models import Image
 from house.models import *
 from flat.models import *
@@ -69,3 +69,10 @@ class IsOwnerPermission(BasePermission):
         else:
             return False
 
+class IsSenderPermission(BasePermission):
+    message = _('Ви не відправляли повідомлення')
+
+    def has_object_permission(self, request, view, obj):
+        if isinstance(obj, Message):
+            return request.user == obj.user_sender
+        return False

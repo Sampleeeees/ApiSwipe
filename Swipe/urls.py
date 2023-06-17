@@ -62,7 +62,9 @@ urlpatterns = [
 
     path('api/v1/', include('house.urls')),
     path('api/v1/', include('flat.urls')),
-    path('api/v1/', include('announcement.urls'))
+    path('api/v1/', include('announcement.urls')),
+    path('api/v1/', include('message.urls')),
+    path('api/v1/', include('filter.urls'))
 
 
 ]

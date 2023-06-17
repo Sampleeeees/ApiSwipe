@@ -58,18 +58,60 @@ class FlatView(PsqMixin, viewsets.ModelViewSet):
         except:
             raise ValidationError({'detail': _('ЖК не зарегестрирован')})
 
+    @extend_schema(summary='Список всіх квартир',
+                   description='Цей endpoint дозволяє переглянути всі квартири що є в системі. '
+                               'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратора '
+                               'або забудовника')
+    def list(self, request, *args, **kwargs):
+        return super().list(self, request, *args, **kwargs)
+
+    @extend_schema(summary='Інформація про конкретну квартиру',
+                   description='Цей endpoint довзоляє переглянути інформацію про квартиру по id/ '
+                               'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратора '
+                               'або забудовника')
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(self, request, *args, **kwargs)
+
+    @extend_schema(summary='Створення квартири',
+                   description='Цей endpoint дозволяє стоврити квартиру в системі. '
+                               'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратора '
+                               'або забудовника')
+    def create(self, request, *args, **kwargs):
+        return super().create(self, request, *args, **kwargs)
+
+    @extend_schema(summary='Часткове оновлення квартири',
+                   description='Цей endpoint дозволяє оновити певну інформацію квартири в системі. '
+                               'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратора '
+                               'або забудовника')
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(self, request, *args, **kwargs)
+
+    @extend_schema(summary='Видалення квартири',
+                   description='Цей endpoint дозволяє видалити квартиру з системі. '
+                               'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратор '
+                               'або забудовником')
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(self, request, *args, **kwargs)
+
+    @extend_schema(summary='Список квартир користувача',
+                   description='Цей endpoint дозволяє переглянути всі квартири у авторизованого користувача')
     @action(methods=['GET'], detail=False, url_path='user')
     def flat_user(self, request, *args, **kwargs):
         obj = self.paginate_queryset(self.get_user_obj())
         serializer = self.get_serializer(instance=obj, many=True)
         return self.get_paginated_response(data=serializer.data)
 
+    @extend_schema(summary='Інформація про конкретну квартиру користувача',
+                   description='Цей enpoint дозволяє переглянути повну інформацію про квартиру яка є у власності '
+                               'авторизованого користувача')
     @action(methods=['GET'], detail=True, url_path='user/detail')
     def flat_user_detail(self, request, *args, **kwargs):
         obj = self.get_object()
         serializer = self.get_serializer(instance=obj, many=False)
         return response.Response(data=serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(summary='Створення квартири користувачем',
+                   description='Цей endpoint дозволяє створити квартиру авторизованому користувачеві в системі')
     @action(methods=['POST'], detail=False, url_path='user/create')
     def create_flat_user(self, request, *args, **kwargs):
         house = self.get_house()
@@ -79,6 +121,9 @@ class FlatView(PsqMixin, viewsets.ModelViewSet):
             return response.Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @extend_schema(summary='Часткове оновлення квартири користувача',
+                   description='Цей endpoint дозволяє оновити інформацію про квартиру яка є у авторизованого '
+                               'користувача')
     @action(methods=['PATCH'], detail=True, url_path='user/update')
     def update_flat_user(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -90,6 +135,8 @@ class FlatView(PsqMixin, viewsets.ModelViewSet):
         else:
             return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @extend_schema(summary='Видалення квартири користувачем',
+                   description='Цей endpoint дозволяє видалити квартиру яка є у власності авторизованого користувача ')
     @action(methods=['DELETE'], detail=True, url_path='user/delete')
     def delete_flat_user(self, request, *args, **kwargs):
         obj = self.get_user_obj()

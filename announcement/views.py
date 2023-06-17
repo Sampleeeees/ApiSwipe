@@ -41,9 +41,13 @@ class AnnouncementViewSet(PsqMixin, generics.ListAPIView, generics.RetrieveUpdat
             return AnnouncementBaseSerializer
         return super().get_serializer_class()
 
+    @extend_schema(summary='Список оголошень',
+                   description='Цей endpoint дозволяє подивитися всі списки оголошень що є в системі')
     def list(self, request, *args, **kwargs):
         return super().list(self, request, *args, **kwargs)
 
+    @extend_schema(summary='Інформація про конкретне оголошення',
+                   description='Цей  endpoint дозволяє переглянути повну інформацію про конкретне оголошення.')
     def retrieve(self, request, *args, **kwargs):
         try:
             obj = self.get_object()
@@ -52,6 +56,8 @@ class AnnouncementViewSet(PsqMixin, generics.ListAPIView, generics.RetrieveUpdat
         except:
             return response.Response(data={'detail': 'Такого оголошення не існує'}, status=status.HTTP_400_BAD_REQUEST)
 
+    @extend_schema(summary='Часткове оновлення оголошення',
+                   description='Цей endpoint дозволяє зробити часткове оновлення оголошення по id')
     def partial_update(self, request, *args, **kwargs):
         try:
             obj = self.get_object()
@@ -66,6 +72,8 @@ class AnnouncementViewSet(PsqMixin, generics.ListAPIView, generics.RetrieveUpdat
         except:
             return response.Response(data={'announcement_id': _('Вкажіть вірний id оголошення')})
 
+    @extend_schema(summary='Видалення оголошення',
+                   description='Цей endpoint дозволяє видалити оголошення по id')
     def destroy(self, request, *args, **kwargs):
         try:
             obj = self.get_object()
@@ -74,6 +82,8 @@ class AnnouncementViewSet(PsqMixin, generics.ListAPIView, generics.RetrieveUpdat
         except:
             return response.Response(data={'detail': 'Такого оголошення не існує'}, status=status.HTTP_400_BAD_REQUEST)
 
+    @extend_schema(summary='Оголошення авторизованого користувача',
+                   description='Цей endpoint дозволяє переглянути всі оголошення які є у користувача що авторизувався в системі')
     @action(methods=['GET'], detail=False, url_path='user')
     def announcement(self, request, *args, **kwargs):
         try:
@@ -83,6 +93,8 @@ class AnnouncementViewSet(PsqMixin, generics.ListAPIView, generics.RetrieveUpdat
         except AttributeError:
             return response.Response(data={'detail': _('У вас немає оголошень')}, status=status.HTTP_400_BAD_REQUEST)
 
+    @extend_schema(summary='Оновлення оголошення авторизованого користувача',
+                   description='Цей endpoint дозволяє оновити оголошення які є у авторизованого користувача')
     @action(methods=['PATCH'], detail=True, url_path='user/update')
     def user_update_announcement(self, request, *args, **kwargs):
         try:
@@ -96,6 +108,8 @@ class AnnouncementViewSet(PsqMixin, generics.ListAPIView, generics.RetrieveUpdat
         except (AttributeError, Announcement.DoesNotExist):
             return response.Response(data={'detail': _('У вас немає оголошення під таким id')})
 
+    @extend_schema(summary='Видалення оголошення авторизованого користувача',
+                   description='Цей endpoint дозволяє видалити оголошення які є у авторизованого користувача')
     @action(methods=['DELETE'], detail=True, url_path='user/delete')
     def user_delete_announcement(self, request, *args, **kwargs):
         try:

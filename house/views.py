@@ -14,6 +14,9 @@ from user.permissions import *
 
 @extend_schema(tags=['House'],)
 class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
+    """
+    ViewSet для опису всіх методів для моделі House
+    """
     serializer_class = House64Serializer
     parser_classes = [JSONParser, MultiPartParser]
     permission_classes = [CustomIsAuthenticate]
@@ -115,7 +118,6 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
         else:
             return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     @extend_schema(summary='Видалення авторизованого забудовника ',
                    description='Цей endpoint дозволяє видалити забудовника з системи. '
                                'Потрібно бути авторизованим забудовником в системі щоб видалити самого себе')
@@ -128,6 +130,9 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
 
 @extend_schema(tags=['Floor'])
 class FloorViewSet(PsqMixin, generics.RetrieveDestroyAPIView, generics.ListAPIView, viewsets.GenericViewSet):
+    """
+    ViewSet для обробки методів для моделі Floor
+    """
     serializer_class = FloorApiSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
@@ -148,11 +153,14 @@ class FloorViewSet(PsqMixin, generics.RetrieveDestroyAPIView, generics.ListAPIVi
         ]
     }
 
-    @extend_schema(summary='Список поверхів')
+    @extend_schema(summary='Список поверхів',
+                   description='Цей endpoint дозволяє переглянути всі поверхи що є в системі')
     def list(self, request, *args, **kwargs):
         return super().list(self, request, *args, **kwargs)
 
-    @extend_schema(summary='Видалення поверху по id')
+    @extend_schema(summary='Видалення поверху',
+                   description='Цей endpoint дозволяє видалити поверх по id. '
+                               'Для цього ви повинні бути авторизованим користувачем з правами доступу Адіністратора')
     def destroy(self, request, *args, **kwargs):
         return super().destroy(self, request, *args, **kwargs)
 
@@ -170,7 +178,8 @@ class FloorViewSet(PsqMixin, generics.RetrieveDestroyAPIView, generics.ListAPIVi
         except:
             raise ValidationError({'detail': _('Будинок не створений')})
 
-    @extend_schema(summary='Інформація про конкретний поверх')
+    @extend_schema(summary='Інформація про конкретний поверх',
+                   description='Цей endpoint дозволяє подивитися інформацію про конкретний поверх')
     def retrieve(self, request, *args, **kwargs):
         obj = self.get_object()
         serializer = self.get_serializer(instance=obj)
@@ -209,6 +218,9 @@ class FloorViewSet(PsqMixin, generics.RetrieveDestroyAPIView, generics.ListAPIVi
 
 @extend_schema(tags=['Section'])
 class SectionViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView, viewsets.GenericViewSet):
+    """
+    ViewSet для обробки методів для моделі Section
+    """
     serializer_class = SectionApiSerializer
     queryset = Section.objects.all()
     permission_classes = [IsAuthenticated]
@@ -265,13 +277,18 @@ class SectionViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpda
     def destroy(self, request, *args, **kwargs):
         return super().destroy(self, request, *args, **kwargs)
 
+    @extend_schema(summary='Список секцій забудовника',
+                   description='Цей endpoint дозволяє переглянути всі секції які є у забудовника. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['GET'], detail=True, url_path='builder')
     def section(self):
         obj = self.paginate_queryset(self.get_queryset().filter(builder__house=self.request.user))
         serializer = self.get_serializer(instance=obj, many=True)
         return self.get_paginated_response(data=serializer.data)
 
-
+    @extend_schema(summary='Створення секції забудовником',
+                   description='Цей endpoint дозволяє створити секцію забудовнику. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['POST'], detail=True, url_path='builder/create')
     def section_create(self, request, *args, **kwargs):
         house = self.get_house()
@@ -281,7 +298,9 @@ class SectionViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpda
             return response.Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+    @extend_schema(summary='Видалення секції забудовником',
+                   description='Цей endpoint дозволяє видалити секцію забудовнику. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['DELETE'], detail=True, url_path='builder/update')
     def section_destroy(self, request, *args, **kwargs):
         obj = self.get_queryset().filter(house__builder=request.user)
@@ -291,6 +310,9 @@ class SectionViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpda
 
 @extend_schema(tags=['Corps'])
 class CorpsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView, viewsets.GenericViewSet):
+    """
+    ViewSet для обробки методів для моделі Corps
+    """
     serializer_class = CorpsApiSerializer
     queryset = Corps.objects.all()
     permission_classes = [IsAuthenticated]
@@ -347,13 +369,18 @@ class CorpsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdate
     def destroy(self, request, *args, **kwargs):
         return super().destroy(self, request, *args, **kwargs)
 
+    @extend_schema(summary='Список корпусів забудовника',
+                   description='Цей endpoint дозволяє переглянути всі корпуси які є у забудовника. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['GET'], detail=True, url_path='builder')
     def corps(self):
         obj = self.paginate_queryset(self.get_queryset().filter(builder__house=self.request.user))
         serializer = self.get_serializer(instance=obj, many=True)
         return self.get_paginated_response(data=serializer.data)
 
-
+    @extend_schema(summary='Створення корпусу забудовником',
+                   description='Цей endpoint дозволяє створити корпус забудовнику. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['POST'], detail=True, url_path='builder/create')
     def corps_create(self, request, *args, **kwargs):
         house = self.get_house()
@@ -363,7 +390,9 @@ class CorpsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdate
             return response.Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+    @extend_schema(summary='Видалення корпусу забудовником',
+                   description='Цей endpoint дозволяє видалити корпус який є у забудовника. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['DELETE'], detail=True, url_path='builder/update')
     def corps_destroy(self, request, *args, **kwargs):
         obj = self.get_queryset().filter(house__builder=request.user)
@@ -372,6 +401,9 @@ class CorpsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdate
 
 @extend_schema(tags=['Document'])
 class DocumentViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView, viewsets.GenericViewSet):
+    """
+    ViewSet для обробки методів для моделі Document
+    """
     serializer_class = DocumentApiSerializer
     permission_classes = [IsAuthenticated]
     queryset = Document.objects.all()
@@ -418,7 +450,7 @@ class DocumentViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpd
         serializer = self.get_serializer(instance=obj)
         return response.Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    @extend_schema(summary='Часткове оновлення корпусу')
+    @extend_schema(summary='Часткове оновлення документу')
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(self, request, *args, **kwargs)
 
@@ -428,13 +460,18 @@ class DocumentViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpd
     def destroy(self, request, *args, **kwargs):
         return super().destroy(self, request, *args, **kwargs)
 
+    @extend_schema(summary='Список документів забудовника',
+                   description='Цей endpoint дозволяє переглянути всі документи які є у забудовника. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['GET'], detail=True, url_path='builder')
     def document(self):
         obj = self.paginate_queryset(self.get_queryset().filter(builder__house=self.request.user))
         serializer = self.get_serializer(instance=obj, many=True)
         return self.get_paginated_response(data=serializer.data)
 
-
+    @extend_schema(summary='Створення документа забудовником',
+                   description='Цей endpoint дозволяє створити документ забудовнику. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['POST'], detail=True, url_path='builder/create')
     def document_create(self, request, *args, **kwargs):
         house = self.get_house()
@@ -444,7 +481,9 @@ class DocumentViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpd
             return response.Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+    @extend_schema(summary='Видалення документу забудовником',
+                   description='Цей endpoint дозволяє видалити документи які є у забудовника. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['DELETE'], detail=True, url_path='builder/update')
     def document_destroy(self, request, *args, **kwargs):
         obj = self.get_queryset().filter(house__builder=request.user)
@@ -454,6 +493,9 @@ class DocumentViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpd
 
 @extend_schema(tags=['News'])
 class NewsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView, viewsets.GenericViewSet):
+    """
+    ViewSet для обробки методів для моделі News
+    """
     serializer_class = NewsApiSerializer
     queryset = News.objects.all()
     permission_classes = [IsAuthenticated]
@@ -510,13 +552,18 @@ class NewsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateD
     def destroy(self, request, *args, **kwargs):
         return super().destroy(self, request, *args, **kwargs)
 
+    @extend_schema(summary='Список новин забудовника',
+                   description='Цей endpoint дозволяє переглянути всі новини які є у забудовника. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['GET'], detail=True, url_path='builder')
     def news(self):
         obj = self.paginate_queryset(self.get_queryset().filter(builder__house=self.request.user))
         serializer = self.get_serializer(instance=obj, many=True)
         return self.get_paginated_response(data=serializer.data)
 
-
+    @extend_schema(summary='Створення новини забудовником',
+                   description='Цей endpoint дозволяє створити новину забудовнику. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['POST'], detail=True, url_path='builder/create')
     def news_create(self, request, *args, **kwargs):
         house = self.get_house()
@@ -526,7 +573,9 @@ class NewsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateD
             return response.Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return response.Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+    @extend_schema(summary='Видалення новини забудовником',
+                   description='Цей endpoint дозволяє видалити новини які є у забудовника. '
+                               'Для цього ви повинні бути авторизованим в системі та мати права Забудовника')
     @decorators.action(methods=['DELETE'], detail=True, url_path='builder/update')
     def news_destroy(self, request, *args, **kwargs):
         obj = self.get_queryset().filter(house__builder=request.user)
