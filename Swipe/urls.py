@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework import routers
+from django.conf.urls.static import static
+from Swipe import settings
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -64,7 +66,15 @@ urlpatterns = [
     path('api/v1/', include('flat.urls')),
     path('api/v1/', include('announcement.urls')),
     path('api/v1/', include('message.urls')),
-    path('api/v1/', include('filter.urls'))
+    path('api/v1/', include('filter.urls')),
+    path('api/v1/', include('promotion.urls')),
+    path('api/v1/', include('favorite.urls')),
+    path('api/v1/', include('user.urls')),
+    path('api/v1/', include('chessboard.urls'))
 
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -55,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     surname = models.CharField(max_length=70, blank=True, null=True)
     phone_number = models.IntegerField(blank=True, null=True)
     email = models.EmailField(unique=True)
-    avatar = models.FileField(upload_to='user/avatar/', blank=True, null=True)
+    avatar = models.ImageField(upload_to='user/avatar/', blank=True, null=True)
     switch_call_message = models.BooleanField(blank=True, null=True, default=False)
     blacklist = models.BooleanField(blank=True, null=True, default=False)
     agent = models.ForeignKey(Agent, verbose_name='Агент', null=True, blank=True, on_delete=models.CASCADE)
@@ -70,5 +70,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+
+
 
 

@@ -7,5 +7,5 @@ class Favorite(models.Model):
     """
     Модель для збереження обраних заявок для користувача
     """
-    announcement = models.ForeignKey(Announcement, verbose_name='Заявка', on_delete=models.CASCADE)
+    announcement = models.ForeignKey(Announcement, verbose_name='Заявка', on_delete=models.CASCADE, limit_choices_to={'confirm': True})
     user = models.ForeignKey(User, verbose_name='Користувач', on_delete=models.CASCADE)
