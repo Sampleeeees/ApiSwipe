@@ -61,6 +61,9 @@ class FloorFlatSerializer(serializers.ModelSerializer):
 
 
 class FlatApiSerializer(serializers.ModelSerializer):
+    """
+    Serializer для виводу даних про квартиру
+    """
     house = serializers.PrimaryKeyRelatedField(queryset=House.objects.all())
     section = serializers.PrimaryKeyRelatedField(queryset=Section.objects.all())
     floor = serializers.PrimaryKeyRelatedField(queryset=Floor.objects.all())

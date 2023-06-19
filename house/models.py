@@ -136,7 +136,7 @@ class House(models.Model):
     contract_sum = models.CharField(max_length=50, choices=ContractSumChoices.choices, default='full')
     property_status = models.CharField(max_length=50, choices=PropertyChoices.choices, default='living_building')
     builder = models.ForeignKey(User, verbose_name='Забудовник', on_delete=models.CASCADE)
-    gallery = models.ForeignKey(Gallery, verbose_name='Галерея', on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, verbose_name='Галерея', related_name='gallery', on_delete=models.CASCADE)
 
 
 class Section(models.Model):

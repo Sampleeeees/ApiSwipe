@@ -12,6 +12,9 @@ from user.permissions import *
 
 @extend_schema(tags=['Chessboard'])
 class ChessboardViewSet(PsqMixin, generics.ListAPIView, generics.UpdateAPIView, generics.DestroyAPIView, viewsets.GenericViewSet):
+    """
+    ViewSet для обробки методів моделі шахматки
+    """
     serializer_class = ChessboardSerializer
     queryset = ChessBoard.objects.all()
     permission_classes = [IsAuthenticated]

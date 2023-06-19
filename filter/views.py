@@ -11,6 +11,9 @@ from .serializers import *
 
 @extend_schema(tags=['Filter'])
 class FilterViewSet(PsqMixin, generics.ListAPIView, viewsets.GenericViewSet):
+    """
+    ViewSer для обробки методів моделі Filter
+    """
     serializer_class = FilterSerializer
     queryset = Filter.objects.all()
     permission_classes = [IsAuthenticated]

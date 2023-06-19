@@ -299,7 +299,9 @@ class NotarySerializer(serializers.ModelSerializer):
         return user
 
 class NotaryUpdateSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer для опису даних про користувача з правами Notary
+    """
     class Meta:
         model = User
         fields = ['id', 'name', 'surname', 'phone_number']

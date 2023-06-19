@@ -4,6 +4,9 @@ from message.serializers import UserSenderSerializer
 from announcement.serializers import AnnouncementBaseSerializer
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    """
+    Serializer для виводу даних улюблених оголошень з додатковим описом про user, announcement
+    """
     user = UserSenderSerializer()
     announcement = AnnouncementBaseSerializer()
 
@@ -12,6 +15,9 @@ class FavoriteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FavoriteUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer для оновлення інформації про улюблені оголошення
+    """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:

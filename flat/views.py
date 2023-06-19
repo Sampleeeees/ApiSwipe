@@ -12,6 +12,9 @@ from django.utils.translation import gettext_lazy as _
 
 @extend_schema(tags=['Flats'])
 class FlatView(PsqMixin, viewsets.ModelViewSet):
+    """
+    ViewSet для обробки методів моделі Flat
+    """
     parser_classes = [JSONParser]
     serializer_class = FlatApiSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']

@@ -12,6 +12,9 @@ from django.utils.translation import gettext_lazy as _
 
 @extend_schema(tags=['Favorite'])
 class FavoriteViewSet(PsqMixin, generics.ListAPIView, generics.DestroyAPIView, viewsets.GenericViewSet):
+    """
+    ViewSet для обробки методів моделі Favorite
+    """
     serializer_class = FavoriteSerializer
     queryset = Favorite.objects.filter(announcement__confirm=True)
     http_method_names = ['get', 'post', 'delete', 'patch']

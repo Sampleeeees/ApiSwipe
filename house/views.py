@@ -19,7 +19,7 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
     """
     serializer_class = House64Serializer
     parser_classes = [JSONParser, MultiPartParser]
-    permission_classes = [CustomIsAuthenticate]
+    permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'post', 'delete', 'patch']
     psq_rules = {
         'list': [
@@ -46,6 +46,14 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
         ]
     }
 
+
+    def serializer_choose(self, request):
+        content_type = request.content_type
+        if 'application/json' in content_type:
+            return House64Serializer
+        elif 'multipart/form-data' in content_type:
+            return HouseSerializer
+
     @extend_schema(summary='Список будинків',
                    description='Ви можете отримати інформацію про всі будинки які створенні на сайті. '
                                'Але повинні бути авторизованим користувачем в системі')
@@ -57,7 +65,12 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
     @extend_schema(summary='Створити будинок',
                    description='Цей endpoint дозволяє авторизованому забудовнику створити будинок в системі.')
     def create(self, request, *args, **kwargs):
-        return super().create(self, request, *args, **kwargs)
+        serializer = self.serializer_choose(request)(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response(data={'message': _('Будинок створено'), 'detail': serializer.data}, status=status.HTTP_201_CREATED)
+        else:
+            return response.Response(data={'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(summary='Вивести інформацію про конкретний будинок',
                    description='Цей endpoint дозволяє подивитися повну інформацію про конкретний будинок. '
@@ -76,14 +89,6 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
                                'Ви повинні бути авторизованим забудовником в системі')
     def partial_update(self, request, *args, **kwargs):
         super().partial_update(self, request, *args, **kwargs)
-
-
-    def serializer_choose(self, request):
-        content_type = request.content_type
-        if 'application/json' in content_type:
-            return House64Serializer
-        elif 'multipart/form-data' in content_type:
-            return HouseSerializer
 
     def get_queryset(self):
         queryset = House.objects.prefetch_related('gallery__image_set').select_related('builder').all()

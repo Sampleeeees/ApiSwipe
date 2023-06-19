@@ -70,7 +70,8 @@ urlpatterns = [
     path('api/v1/', include('promotion.urls')),
     path('api/v1/', include('favorite.urls')),
     path('api/v1/', include('user.urls')),
-    path('api/v1/', include('chessboard.urls'))
+    path('api/v1/', include('chessboard.urls')),
+    path('api/v1/', include('gallery.urls'))
 
 
 ]

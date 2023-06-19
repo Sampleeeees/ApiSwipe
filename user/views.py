@@ -20,17 +20,23 @@ from django.utils.translation import gettext_lazy as _
 
 @extend_schema(summary='Реєстрація забудовника', description='Для реєстрації потрібно вказати ваш актуальний email, пароль, повторити парооль, ваше імя та прізвище')
 class BuilderRegisterView(RegisterView):
+    """
+    Кастомна реєстрація будівельника
+    """
     serializer_class = CustomRegisterSerializer
 
 @extend_schema(summary='Реєстрація звичайного користувача', description='Для реєстрації потрібно вказати ваш актуальний email, пароль, повторити парооль, ваше імя та прізвище')
 class UserRegisterView(RegisterView):
+    """
+    Кастомна реєстрація звичайного користувача
+    """
     serializer_class = CustomRegularUserRegisterSerializer
 
 
 class ConfirmCustomEmailView(TemplateResponseMixin, View):
     """
-        Template for send custom confirm password on email
-        """
+    Template for send custom confirm password on email
+    """
     template_name = 'account/email/confirm_verify_email.html'
 
     def get(self, request, *args, **kwargs):
@@ -53,6 +59,9 @@ class CustomPasswordResetView(PasswordResetView):
 
 @extend_schema(tags=['Subscription'])
 class SubscriptionViewSet(PsqMixin, viewsets.ModelViewSet):
+    """
+    ViewSet для обробки методів моделі Subscription
+    """
     serializer_class = SubscriptionSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
     queryset = Subscription.objects.all()
@@ -89,6 +98,9 @@ class SubscriptionViewSet(PsqMixin, viewsets.ModelViewSet):
 
 @extend_schema(tags=['User'])
 class UserViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView, viewsets.GenericViewSet):
+    """
+    ViewSet для обробки методів моделі User
+    """
     serializer_class = UserSerializer
     parser_classes = [JSONParser, MultiPartParser]
     queryset = User.objects.all()
@@ -235,6 +247,9 @@ class UserViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateD
 
 @extend_schema(tags=['Notary'])
 class NotaryViewSet(PsqMixin, viewsets.ModelViewSet):
+    """
+    ViewSet для обробки методів користувача Notary
+    """
     serializer_class = NotaryApiSerializer
     parser_classes = [JSONParser, MultiPartParser]
     queryset = User.objects.filter(role__is_notary=True)
