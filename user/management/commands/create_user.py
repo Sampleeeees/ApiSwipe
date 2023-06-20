@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Create Admin user
-        role_admin = Role.objects.get(is_admin=True)
+        role_admin = Role.objects.filter(is_admin=True).first()
         admin = User.objects.create(
             name='admin',
             surname='admin',
@@ -32,7 +32,7 @@ class Command(BaseCommand):
         print('Admin email verified')
 
         # Create Builder user
-        role_builder = Role.objects.get(is_builder=True)
+        role_builder = Role.objects.filter(is_builder=True).first()
         builder = User.objects.create(
             name='builder',
             surname='builder',
@@ -55,7 +55,7 @@ class Command(BaseCommand):
         print('Builder email verified')
 
         # Create Notary user
-        role_notary = Role.objects.get(is_notary=True)
+        role_notary = Role.objects.filter(is_notary=True).first()
         notary = User.objects.create(
             name='notary',
             surname='notary',
@@ -78,7 +78,7 @@ class Command(BaseCommand):
         print('Notary email verified')
 
         # Create Manager user
-        role_manager = Role.objects.get(is_manager=True)
+        role_manager = Role.objects.filter(is_manager=True).first()
         manager = User.objects.create(
             name='manager',
             surname='manager',
@@ -101,7 +101,7 @@ class Command(BaseCommand):
         print('Manager email verified')
 
         # Create Regular user
-        role_regular = Role.objects.get(name_role='Regular user')
+        role_regular = Role.objects.filter(name_role='Regular user').first()
         regular = User.objects.create(
             name='regular',
             surname='regular',
