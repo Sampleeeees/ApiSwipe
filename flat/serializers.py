@@ -78,9 +78,9 @@ class FlatApiSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs.get('section', None) and attrs.get('floor', None) and attrs.get('corps', None):
             if attrs.get('section', None).house != attrs.get('floor').house != attrs.get('corps').house != self.context.get('house', None):
-                raise ValidationError({'corps': _('Корпус, секція та поверх повинні бути с одного будинку'),
-                                       'section': _('Корпус, секція та поверх повинні бути с одного будинку'),
-                                       'floor': _('Корпус, секція та поверх повинні бути с одного будинку')})
+                raise ValidationError({'corps': _('Корпус, секція та поверх повинні бути з одного будинку'),
+                                       'section': _('Корпус, секція та поверх повинні бути з одного будинку'),
+                                       'floor': _('Корпус, секція та поверх повинні бути з одного будинку')})
         return super().validate(attrs)
 
     def update(self, instance: Flat, validated_data):

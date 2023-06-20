@@ -81,25 +81,30 @@ class MessageViewSer(PsqMixin, generics.ListAPIView, generics.DestroyAPIView, vi
                                'надсилав повідомлення')
     @action(methods=['DELETE'], detail=True, url_path='sender/delete')
     def message_user_delete(self, request, *args, **kwargs):
-        try:
-            obj = self.get_queryset().get(pk=self.kwargs['pk'], user_sender=request.user)
-            obj.delete()
-            return response.Response(data={'detail': 'Ваше повідомлення видалено'}, status=status.HTTP_200_OK)
-        except (AttributeError, Message.DoesNotExist):
-            return response.Response(data={'detail': _('Вказано не вірно id повідомлення або ви не маєте його')}, status=status.HTTP_404_NOT_FOUND)
+        if not request.user.blacklist:
+            try:
+                obj = self.get_queryset().get(pk=self.kwargs['pk'], user_sender=request.user)
+                obj.delete()
+                return response.Response(data={'detail': 'Ваше повідомлення видалено'}, status=status.HTTP_200_OK)
+            except (AttributeError, Message.DoesNotExist):
+                return response.Response(data={'detail': _('Вказано не вірно id повідомлення або ви не маєте його')}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return response.Response(data={'detail': _('Ви занесені до чорного списку і не можете видаляти повідомлення')}, status=status.HTTP_423_LOCKED)
 
     @extend_schema(summary='Відправлення повідомлення',
                    description='Цей endpoint дозволяє відправити повідомлення в чат. Для цього вам потрібно бути '
                                'авторизованим користувачем в системі')
     @action(methods=['POST'], detail=False, url_path='sender/create')
     def message_user_create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return response.Response(data={'detail': _(f'Повідомлення відправленно у чат з id {serializer.data["chat"]}')}, status=status.HTTP_200_OK)
+        if not request.user.blacklist:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return response.Response(data={'detail': _(f'Повідомлення відправленно у чат з id {serializer.data["chat"]}')}, status=status.HTTP_200_OK)
+            else:
+                return response.Response(data={'detail': _('Такого чату не існує')})
         else:
-            return response.Response(data={'detail': _('Такого чату не існує')})
-
+            return response.Response(data={'detail': _('Ви занесені до чорного списку і не можете відправляти повідомлення')}, status=status.HTTP_423_LOCKED)
 
 
 @extend_schema(tags=['Chat'])

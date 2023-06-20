@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from drf_psq import PsqMixin
+from drf_psq import PsqMixin, Rule
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, response, generics, viewsets
 from rest_framework.decorators import action
-
+from user.permissions import *
 from .models import *
 from .serializers import *
 from django.utils.translation import gettext_lazy as _
@@ -18,6 +18,17 @@ class FavoriteViewSet(PsqMixin, generics.ListAPIView, generics.DestroyAPIView, v
     serializer_class = FavoriteSerializer
     queryset = Favorite.objects.filter(announcement__confirm=True)
     http_method_names = ['get', 'post', 'delete', 'patch']
+    psq_rules = {
+        'list': [
+            Rule([CustomIsAuthenticate])
+        ],
+        'destroy': [
+            Rule([IsAdminPermission | IsManagerPermission | IsBuilderPermission])
+        ],
+        ('favorite_user', 'favorite_user_update', 'favorite_user_delete'): [
+            Rule([CustomIsAuthenticate])
+        ]
+    }
 
     def get_serializer_class(self):
         if self.action == 'favorite_user_update':

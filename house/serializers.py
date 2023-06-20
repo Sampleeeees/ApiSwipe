@@ -54,6 +54,13 @@ class HouseSerializer(serializers.ModelSerializer):
     general_image = serializers.ImageField()
     gallery_image = ImageSerializer(required=False, many=True)
     builder = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    address = serializers.CharField(allow_blank=True)
+    map_position = serializers.CharField(allow_blank=True)
+    min_price = serializers.IntegerField(default=0)
+    price_for_m2 = serializers.IntegerField(default=0)
+    area = serializers.IntegerField(default=0)
+    description = serializers.CharField(allow_blank=True)
+    sea_distance = serializers.IntegerField(default=0)
 
     class Meta:
         model = House
@@ -82,27 +89,31 @@ class HouseSerializer(serializers.ModelSerializer):
         return created_house
 
     def update(self, instance: House, validated_data):
-        gallery = validated_data.pop('image', None)
-
-        for item in validated_data.keys():
-            setattr(instance, item, validated_data.get(item))
+        gallery = self.context['request'].data.get('gallery_image', [])
+        print('GALLERY', gallery)
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
 
         instance.save()
 
+        print(instance.gallery)
+
         try:
             if gallery:
+                new_gallery = "[" + gallery + "]"
                 old_image = Image.objects.filter(gallery=instance.gallery)
                 for item in old_image:
                     item.delete()
 
-                for item in gallery:
-                    image = Image.objects.create(image=item.get('image'),
+                for item in json.loads(new_gallery):
+                    image = Image.objects.create(image=convert_base64_to_image(item['image']),
                                                  gallery=instance.gallery)
                     image.save()
         except:
-            return instance
+            return ValidationError({'detail': _('Помилка при запису фото в галерею')})
 
         return instance
+
 
 
     def to_representation(self, instance):
@@ -146,10 +157,12 @@ class House64Serializer(serializers.ModelSerializer):
         return created_house
 
     def update(self, instance: House, validated_data):
-        gallery = validated_data.pop('image', None)
+        print(validated_data)
+        gallery = validated_data.pop('gallery_image', None)
 
         for item in validated_data.keys():
-            setattr(instance, item, validated_data.get(item))
+            if validated_data.get(item):
+                setattr(instance, item, validated_data.get(item))
 
         instance.save()
 

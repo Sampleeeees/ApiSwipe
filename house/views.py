@@ -58,8 +58,6 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
                    description='Ви можете отримати інформацію про всі будинки які створенні на сайті. '
                                'Але повинні бути авторизованим користувачем в системі')
     def list(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return CustomExceptionIsAuthenticated
         return super().list(request, *args, *kwargs)
 
     @extend_schema(summary='Створити будинок',
@@ -84,11 +82,21 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         return super().destroy(self, request, *args, **kwargs)
 
+
     @extend_schema(summary='Для частичного оновлення будинку',
                    description='Цей endpoint дозволяє оновити тільки те що вам потрібно. '
                                'Ви повинні бути авторизованим забудовником в системі')
     def partial_update(self, request, *args, **kwargs):
-        super().partial_update(self, request, *args, **kwargs)
+        obj = self.get_queryset().get(pk=self.kwargs['pk'])
+        if obj:
+            serializer = self.serializer_choose(request)(data=request.data, instance=obj, partial=True, context={'request': request})
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return response.Response(data={'message': _('Будинок оновлено'), 'detail': serializer.data}, status=status.HTTP_200_OK)
+            else:
+                return response.Response(data={'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return response.Response(data={'detail': _('Будинку під таким id не знайдено')}, status=status.HTTP_404_NOT_FOUND)
 
     def get_queryset(self):
         queryset = House.objects.prefetch_related('gallery__image_set').select_related('builder').all()
