@@ -26,6 +26,19 @@ services:
       - "1337:80"
     depends_on:
       - web
+  redis:
+    image: 'redis:alpine'
+
+  celery:
+    restart: always
+    build:
+      context: .
+    command: python -m celery -A Swipe worker
+    env_file:
+      - .env
+    depends_on:
+      - web
+      - redis
 
 volumes:
   postgres_data:

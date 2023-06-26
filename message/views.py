@@ -41,13 +41,13 @@ class MessageViewSer(PsqMixin, generics.ListAPIView, generics.DestroyAPIView, vi
                    description='Цей endpoint дозволяє переглянути всі повідомлення що є в системі. '
                                'Ви повинні бути авторизованим користувачем з правами доступу адміністратора')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення конкретного повідомлення',
                    description='Цей endpoint довзволяє видалити повідомлення з системи. '
                                'Для цього ви повинні бути авторизованим користувачем з правами Адміністратора')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(summary='Список всіх повідомлень користувача',
                    description='Цей endpoint дозволяє подивитися авторизованому користувачеві всі повідолмлення'
@@ -135,7 +135,7 @@ class ChatViewSet(PsqMixin, generics.ListAPIView, generics.RetrieveDestroyAPIVie
                    description='Цей endpoint дозволяє переглянути всі чати що є в системі. '
                                'Для цього потрібно бути авторизованим в системі та мати права Адміністратора')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Інформація про конкретний чат',
                    description='Цей endpoint дозволяє переглянути чат та всі повідомлення що до нього посилаються. '

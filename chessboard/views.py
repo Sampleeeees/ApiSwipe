@@ -37,19 +37,19 @@ class ChessboardViewSet(PsqMixin, generics.ListAPIView, generics.UpdateAPIView, 
                    description='Цей endpoint дозволяє переглянути всі шахматки що є в системі. '
                                'Для цього ви повинні бути авторизованим користувачем в системі з правами Адміністратора')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Часткове оновлення шахматки',
                    description='Цей endpoint дозволяє оновити шахматку що є в системі. '
                                'Для цього ви повинні бути авторизованим користувачем в системі з правами Адміністратора')
     def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(self, request, *args, **kwargs)
+        return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення шахматки',
                    description='Цей endpoint дозволяє видалити шахматку що є в системі. '
                                'Для цього ви повинні бути авторизованим користувачем в системі з правами Адміністратора')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(summary='Список всіх шахматок користувача',
                    description='Цей endpoint дозволяє переглянути всі шахматки що є у користувача')

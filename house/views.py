@@ -32,8 +32,7 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
             Rule([IsBuilderPermission])
         ],
         'destroy': [
-            Rule([IsAdminPermission]),
-            Rule([IsBuilderPermission])
+            Rule([IsAdminPermission | IsBuilderPermission])
         ],
         'partial_update': [
             Rule([IsBuilderPermission])
@@ -74,13 +73,13 @@ class HouseViewSet(PsqMixin, viewsets.ModelViewSet):
                    description='Цей endpoint дозволяє подивитися повну інформацію про конкретний будинок. '
                                'Для цього ви повинні бути авторизовнаим в системі та знати id будинку.')
     def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(self, request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення конкретного будинку',
                    description='Цей endpoint дозволяє видалити конкретний будинок по id.'
                                'Але для цього ви повинні бути авторизованим забудовником в системі')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
 
     @extend_schema(summary='Для частичного оновлення будинку',
@@ -169,13 +168,13 @@ class FloorViewSet(PsqMixin, generics.RetrieveDestroyAPIView, generics.ListAPIVi
     @extend_schema(summary='Список поверхів',
                    description='Цей endpoint дозволяє переглянути всі поверхи що є в системі')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення поверху',
                    description='Цей endpoint дозволяє видалити поверх по id. '
                                'Для цього ви повинні бути авторизованим користувачем з правами доступу Адіністратора')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
 
     def get_object(self, *args, **kwargs):
@@ -264,13 +263,13 @@ class SectionViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpda
                    description='Цей endpoint дозволяє подивитися всі секції що є в системі. '
                                'Для цього ви повинні бути авторизованими')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Створення секції',
                    description='Цей endpoint дозволяє забудовнику створити секції для будинку. '
                                'Для цього ви повинні бути авторизованим забудовником в системі')
     def create(self, request, *args, **kwargs):
-        return super().create(self, request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
 
     @extend_schema(summary='Інформація про конкретну секцію',
                    description='Цей endpoint дозволяє подивитися всю інформацію про конкретну секцію. '
@@ -282,13 +281,13 @@ class SectionViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpda
 
     @extend_schema(summary='Часткове оновлення секції')
     def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(self, request, *args, **kwargs)
+        return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення секції',
                    description='Цей endpoint дозволяє видалити секцію із системи. '
                                'Ви повинні бути авторизованим в системі забудовником.')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(summary='Список секцій забудовника',
                    description='Цей endpoint дозволяє переглянути всі секції які є у забудовника. '
@@ -356,13 +355,13 @@ class CorpsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdate
                    description='Цей endpoint дозволяє подивитися всі корпуси що є в системі. '
                                'Для цього ви повинні бути авторизованими')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Створення корпусу',
                    description='Цей endpoint дозволяє забудовнику створити корпус для будинку. '
                                'Для цього ви повинні бути авторизованим забудовником в системі')
     def create(self, request, *args, **kwargs):
-        return super().create(self, request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
 
     @extend_schema(summary='Інформація про конкретний корпус',
                    description='Цей endpoint дозволяє подивитися всю інформацію про конкретний корпус. '
@@ -374,13 +373,13 @@ class CorpsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdate
 
     @extend_schema(summary='Часткове оновлення корпусу')
     def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(self, request, *args, **kwargs)
+        return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення корпусу',
                    description='Цей endpoint дозволяє видалити корпус із системи. '
                                'Ви повинні бути авторизованим в системі забудовником.')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(summary='Список корпусів забудовника',
                    description='Цей endpoint дозволяє переглянути всі корпуси які є у забудовника. '
@@ -447,13 +446,13 @@ class DocumentViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpd
                    description='Цей endpoint дозволяє подивитися всі документи що є в системі. '
                                'Для цього ви повинні бути авторизованими')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Створення документу',
                    description='Цей endpoint дозволяє забудовнику створити документ для будинку. '
                                'Для цього ви повинні бути авторизованим забудовником в системі')
     def create(self, request, *args, **kwargs):
-        return super().create(self, request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
 
     @extend_schema(summary='Інформація про конкретний документ',
                    description='Цей endpoint дозволяє подивитися всю інформацію про конкретний документ. '
@@ -465,13 +464,13 @@ class DocumentViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpd
 
     @extend_schema(summary='Часткове оновлення документу')
     def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(self, request, *args, **kwargs)
+        return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення документу',
                    description='Цей endpoint дозволяє видалити документ із системи. '
                                'Ви повинні бути авторизованим в системі забудовником.')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(summary='Список документів забудовника',
                    description='Цей endpoint дозволяє переглянути всі документи які є у забудовника. '
@@ -539,13 +538,13 @@ class NewsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateD
                    description='Цей endpoint дозволяє подивитися всі новини що є в системі. '
                                'Для цього ви повинні бути авторизованими')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Створення корпусу',
                    description='Цей endpoint дозволяє забудовнику створити новину для будинку. '
                                'Для цього ви повинні бути авторизованим забудовником в системі')
     def create(self, request, *args, **kwargs):
-        return super().create(self, request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
 
     @extend_schema(summary='Інформація про конкретну новину',
                    description='Цей endpoint дозволяє подивитися всю інформацію про конкретну новину. '
@@ -557,13 +556,13 @@ class NewsViewSet(PsqMixin, generics.ListCreateAPIView, generics.RetrieveUpdateD
 
     @extend_schema(summary='Часткове оновлення новини')
     def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(self, request, *args, **kwargs)
+        return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення новини',
                    description='Цей endpoint дозволяє видалити новину із системи. '
                                'Ви повинні бути авторизованим в системі забудовником.')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(summary='Список новин забудовника',
                    description='Цей endpoint дозволяє переглянути всі новини які є у забудовника. '

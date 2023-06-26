@@ -46,6 +46,7 @@ class Sales_departament(models.Model):
     email = models.EmailField()
 
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Model abstract for custom User
@@ -70,6 +71,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+
+class UserSubscription(models.Model):
+    """
+    Time subscription for user
+    """
+    subscription = models.ForeignKey(Subscription, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    expire_date = models.DateTimeField(auto_now_add=True)
+    auto_pay = models.BooleanField(default=False)
 
 
 

@@ -66,35 +66,35 @@ class FlatView(PsqMixin, viewsets.ModelViewSet):
                                'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратора '
                                'або забудовника')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Інформація про конкретну квартиру',
                    description='Цей endpoint довзоляє переглянути інформацію про квартиру по id/ '
                                'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратора '
                                'або забудовника')
     def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(self, request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
     @extend_schema(summary='Створення квартири',
                    description='Цей endpoint дозволяє стоврити квартиру в системі. '
                                'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратора '
                                'або забудовника')
     def create(self, request, *args, **kwargs):
-        return super().create(self, request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
 
     @extend_schema(summary='Часткове оновлення квартири',
                    description='Цей endpoint дозволяє оновити певну інформацію квартири в системі. '
                                'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратора '
                                'або забудовника')
     def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(self, request, *args, **kwargs)
+        return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення квартири',
                    description='Цей endpoint дозволяє видалити квартиру з системі. '
                                'Для цього ви повинні бути авторизованим користувачем з правами доступу Адміністратор '
                                'або забудовником')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(summary='Список квартир користувача',
                    description='Цей endpoint дозволяє переглянути всі квартири у авторизованого користувача')

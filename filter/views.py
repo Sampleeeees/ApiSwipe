@@ -41,7 +41,7 @@ class FilterViewSet(PsqMixin, generics.ListAPIView, viewsets.GenericViewSet):
                    description='Цей endpoint дозволяє переглянути всі збережені фільтри та користувача який їх зберіг. '
                                'Для цього ви повинні бути авторизованим та мати права доступу Адміністратор')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Список всіх фільтрів користувача',
                    description='Цей endpoint дозволяє подивитися всі фільтри які зберігав авторизований користувач.  '

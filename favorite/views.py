@@ -39,13 +39,13 @@ class FavoriteViewSet(PsqMixin, generics.ListAPIView, generics.DestroyAPIView, v
                    description='Цей endpoint дозволяє переглянути всі збережені оголошення що робили користувачі '
                                'на сайті. Ви повинні бути авторизованим користувачем з правами доступу Адміністратора')
     def list(self, request, *args, **kwargs):
-        return super().list(self, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @extend_schema(summary='Видалення збережених оголошень',
                    description='Цей endpoint дозволяє видалити збережені оголошення'
                                '. Ви повинні бути авторизованим користувачем з правами доступу Адміністратора')
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(self, request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(summary='Список всіх збережених оголошень користувача',
                    description='Цей endpoint дозволяє переглянути всі збережені оголошення що робив користувач '
